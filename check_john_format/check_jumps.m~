@@ -1,0 +1,25 @@
+mainDir ='/Users/ajaver/Desktop/test_jumpy_tiff_20150203/';
+
+fileList = {'test_MPC_C_1376.tif', 'test_MPC_C_1377.tif', 'test_MPC_C_1378.tif'};
+
+for fileStr 
+fileName = [mainDir 'test_MPC_C_1376.tif'];
+
+
+%fileName = '/Users/ajaver/Desktop/DCR_D_1237_LZW.tif';
+infoImage=imfinfo(fileName);
+
+diff_range = zeros(1, numel(infoImage)-1);
+mask_prev = [];
+for frame = 1:numel(infoImage)
+    disp(frame)
+    I = imread(fileName,'Index',frame,'Info',infoImage);
+    mask = I==0;
+    if ~isempty(mask_prev)
+        mask_join = ~(mask|mask_prev);
+        dd = abs(I(mask_join)-I_prev(mask_join));
+        diff_range(frame-1) = mean(dd(:));
+    end
+    I_prev = I;
+    mask_prev = mask;
+end
